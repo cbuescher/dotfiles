@@ -1,0 +1,77 @@
+function convert_flac() {
+	for f in *.flac 
+		do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"
+		done
+	mkdir mp3
+	mv *.mp3 mp3
+}
+
+# add some git scripts to quickly change branches and update elasticsearch working directories
+function gc() {
+    if [ $# -eq 0 ] ; then
+	BRANCH="master"
+    else
+    	BRANCH=$1
+    fi
+
+    echo "git changing from current to $BRANCH"
+    git checkout $BRANCH
+}
+
+
+function gapr() {
+    if [ ! $# -eq 2 ] ; then
+	echo "Usage: gapr USER BRANCH"
+    else
+    	echo "adding git repo $1 as remote"
+	git remote add $1 git@github.com:$1/elasticsearch.git
+	git fetch $1
+    	echo "checking out $1/$2 as $2"
+    	git checkout -b $2 $1/$2
+    fi 
+}
+
+
+function gu() {
+    CURRENT=`git rev-parse --abbrev-ref HEAD`
+    if [ $# -eq 0 ] ; then
+	BRANCH=$CURRENT
+    else
+    	BRANCH=$1
+    fi
+
+    CURRENT=`git rev-parse --abbrev-ref HEAD`
+    echo "changing from current branch $CURRENT to $BRANCH"
+    git checkout $BRANCH
+    git fetch origin $BRANCH
+    git pull origin $BRANCH
+    echo "changing branch back to $CURRENT "
+    git checkout $CURRENT
+}
+
+function es_up() {
+	echo "###### Updating ES master"
+	es
+	gc master
+	gu master
+	./gradlew eclipse
+
+	echo "###### Updating ES master gradle"
+	cd ~/workspace/es_master
+	gc master
+	gu master
+	
+	echo "###### Updating ES 7.x"
+	es7
+	gc 7.x
+	gu 7.x
+
+	echo "###### Updating ES 6.8"
+	es6
+	gc 6.8
+	gu 6.8
+        sdk use java 12.0.2-open
+	java --version
+	./gradlew eclipse
+        sdk use java 13.0.2-open
+}

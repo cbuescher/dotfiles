@@ -1,0 +1,9 @@
+alias vlc="/Applications/VLC.app/Contents/MacOS/VLC"
+alias es="cd ~/workspace/elasticsearch"
+alias es7="cd ~/workspace/es_7/elasticsearch"
+alias es6="cd ~/workspace/es_6/elasticsearch"
+alias es5="cd ~/workspace/es_5/elasticsearch"
+unalias gc
+alias la='ls -lA'
+alias ll='ls -l'
+alias weather='curl "wttr.in/~Berlin?n2"'
