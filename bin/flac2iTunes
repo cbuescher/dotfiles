@@ -1,0 +1,5 @@
+#!/bin/bash
+for f in *.flac; do ffmpeg -i "$f" -q:a 0 "${f%flac}mp3"; done
+mkdir flac
+mv *.flac flac
+cp *.mp3 "/Users/christoph/Music/iTunes/iTunes Media/Automatically Add to iTunes.localized"

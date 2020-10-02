@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "Running build on $1"
+branch=`git rev-parse --abbrev-ref HEAD`
+echo $branch
+ssh -t $1 ". .bashrc; exec ./runBuild.sh $branch"

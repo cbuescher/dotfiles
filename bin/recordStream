@@ -1,0 +1,4 @@
+#!/bin/bash
+date=`date "+%Y%m%d-%H%M%S"`
+/Applications/VLC.app/Contents/MacOS/VLC -I dummy --no-repeat --run-time=3720
+--sout="#file{dst=/Users/christoph/$date.mp3} sout-keep" $1 vlc://quit

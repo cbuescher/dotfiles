@@ -1,0 +1,4 @@
+#!/bin/sh
+cd /Applications/SuperCollider.app/Contents/Resources
+export SC_PLUGIN_PATH="/full/path/to/SuperCollider.app/Contents/Resources/plugins/";
+exec ./scsynth $*

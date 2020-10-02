@@ -1,0 +1,4 @@
+#!/bin/bash
+#date=`date "+%Y%m%d-%H%M%S"`
+#/Applications/VLC.app/Contents/MacOS/VLC -I dummy --no-repeat --run-time=3960 --sout="#file{dst=/Users/christoph/gw_$date.mp3} sout-keep" http://radio-hannover.divicon-stream.net/rhann_livestrea_zqu6-mp3-192 vlc://quit
+timeout 3840 wget -O gw_`date +%Y%m%d-%H%M%S`.mp3 http://radio-hannover.divicon-stream.net/rhann_livestrea_zqu6-mp3-192 1> /dev/null 2> /dev/null

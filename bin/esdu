@@ -1,0 +1,4 @@
+#!/bin/bash
+java -cp /Users/christoph/workspace/elasticsearch-disk-usage/build/libs/elasticsearch-disk-usage-7.9.0*.jar \
+  co.elastic.ElasticsearchDiskUsage \
+/Users/christoph/workspace/elasticsearch/build/testclusters/runTask-0/data/indices/$1/0/index > out_$1

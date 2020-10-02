@@ -1,0 +1,3 @@
+#!/bin/bash
+date=`date "+%Y%m%d-%H%M%S"`
+/Applications/VLC.app/Contents/MacOS/VLC --verbose 2 http://radio-hannover.divicon-stream.net/rhann_livestrea_zqu6-mp3-192 -I dummy --no-repeat --run-time=3960 --sout="#file{dst=/Users/christoph/gw_$date.mp3} --sout-keep" vlc://quit
