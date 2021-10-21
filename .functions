@@ -55,16 +55,10 @@ function es_up() {
 	gc master
 	gu master
 
-	echo "###### Updating old ES master "
-	cd ~/workspace/elasticsearch-master-old
-	gc master
-	gu master
-	./gradlew eclipse
-	
-	echo "###### Updating ES 7.x"
+	echo "###### Updating ES 7.16"
 	es7
-	gc 7.x
-	gu 7.x
+	gc 7.16
+	gu 7.16
 
 	echo "###### Updating ES 6.8"
 	es6
@@ -73,5 +67,5 @@ function es_up() {
         sdk use java 12.0.2-open
 	java --version
 	./gradlew eclipse
-        sdk use java 14.0.1-open
+        sdk use java 16.0.1-open
 }
