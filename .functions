@@ -67,5 +67,5 @@ function es_up() {
         sdk use java 12.0.2-open
 	java --version
 	./gradlew eclipse
-        sdk use java 16.0.1-open
+        sdk use java 17.0.1-oracle
 }
