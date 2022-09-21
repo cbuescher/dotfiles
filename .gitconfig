@@ -1,0 +1,49 @@
+[user]
+	name = Christoph Büscher
+	email = cbuescher@posteo.de
+	signingkey = CEABB29FCAEF147D
+
+[alias]
+	pr = "!f() { git fetch origin pull/$1/head:pr/$1; }; f"
+	tree = log --oneline --decorate --graph
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	ap = commit -a --amend --no-edit
+	hd = rev-parse HEAD
+	um = !git checkout master && git pull origin master && git checkout -
+	re = for-each-ref --sort=-committerdate refs/heads/ --count=20
+	cuc = "!f() { git fetch origin; git checkout $1; git pull origin $1; git cherry-pick origin/$2; git diff HEAD~1 HEAD; }; f"
+[push]
+	default = simple
+[rerere]
+	enabled = true
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+
+[diff]
+	tool = diffmerge
+[filesystem "Oracle Corporation|12|/dev/disk1s1"]
+	timestampResolution = 7000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|12.0.1|/dev/disk1s1"]
+	timestampResolution = 8000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|12.0.2|/dev/disk1s1"]
+	timestampResolution = 7000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|13.0.1|/dev/disk1s1"]
+	timestampResolution = 7000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|13|/dev/disk1s1"]
+	timestampResolution = 7000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|13.0.2|/dev/disk1s1"]
+	timestampResolution = 10000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|14|/dev/disk1s1"]
+	timestampResolution = 13000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|15|/dev/disk1s1"]
+	timestampResolution = 8000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
