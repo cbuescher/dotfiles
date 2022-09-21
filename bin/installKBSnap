@@ -3,8 +3,10 @@ if [[ $# -eq 0 ]] ; then
     echo 'please specify version to install'
     exit 1
 fi
-if [ ! -f kibana-$1-SNAPSHOT.* ]; then
-    url=https://snapshots.elastic.co/downloads/kibana/kibana-$1-SNAPSHOT-darwin-x86_64.tar.gz
+KBNAME=kibana-$1-SNAPSHOT
+OS=darwin-x86_64
+if [ ! -f $KBNAME.* ]; then
+    url=https://snapshots.elastic.co/downloads/kibana/$KBNAME-$OS.tar.gz
     if curl --output /dev/null --silent --head --fail "$url"; then
 	curl -O "$url"
     else
@@ -12,4 +14,11 @@ if [ ! -f kibana-$1-SNAPSHOT.* ]; then
     fi
 fi
 echo "Extracting kibana tarball"
-tar xfz kibana-$1-darwin-x86_64.tar.gz
+tar xfz $KBNAME-$OS.tar.gz
+
+cat >> $KBNAME/config/kibana.yml <<END
+# ---- add elastic user / bootstrap pw
+
+elasticsearch.username: "elastic-admin"
+elasticsearch.password: "elastic-password"
+END
