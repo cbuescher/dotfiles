@@ -1,8 +1,7 @@
 alias vlc="/Applications/VLC.app/Contents/MacOS/VLC"
 alias es="cd ~/workspace/elasticsearch"
 alias es8="cd ~/workspace/es_8"
-alias es7="cd ~/workspace/es_7/elasticsearch"
-alias es6="cd ~/workspace/es_6/elasticsearch"
+alias es7="cd ~/workspace/es_7"
 unalias gc
 alias la='ls -lA'
 alias ll='ls -l'
