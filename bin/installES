@@ -3,11 +3,13 @@ if [[ $# -eq 0 ]] ; then
     echo 'please specify version to install'
     exit 1
 fi
-if [[ $1 == 7.* || $1 == 8.* ]]; then
+
+if [[ $(arch) == "i386" ]]; then
     VERSION=$1-darwin-x86_64
 else
-    VERSION=$1
+    VERSION=$1-darwin-aarch64
 fi
+
 if [ ! -f elasticsearch-$VERSION.* ]; then
     url=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$VERSION.tar.gz
     if curl --output /dev/null --silent --head --fail "$url"; then
@@ -16,8 +18,8 @@ if [ ! -f elasticsearch-$VERSION.* ]; then
 	echo "URL does not exist: $url"
     fi
 fi
-if [ ! -f kibana-$1-darwin-x86_64.tar.gz ]; then
-    url=https://artifacts.elastic.co/downloads/kibana/kibana-$1-darwin-x86_64.tar.gz
+if [ ! -f kibana-$VERSION.tar.gz ]; then
+    url=https://artifacts.elastic.co/downloads/kibana/kibana-$VERSION.tar.gz
     if curl --output /dev/null --silent --head --fail "$url"; then
 	curl -O "$url"
     else
@@ -27,13 +29,17 @@ fi
 echo "Extracting elasticsearch tarball"
 tar xfz elasticsearch-$VERSION.tar.gz
 echo "Extracting kibana tarball"
-tar xfz kibana-$1-darwin-x86_64.tar.gz
+tar xfz kibana-$VERSION.tar.gz
 
-# ---- disable some x-pack features 
+cat >> elasticsearch-$1/config/elasticsearch.yml <<END
+
+# ---- disable some x-pack features
 
 xpack.graph.enabled: false
 xpack.ml.enabled: false
 xpack.watcher.enabled: false
+
+END
 
 # startup to get enrollment token
 
