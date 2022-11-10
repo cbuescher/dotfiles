@@ -55,10 +55,10 @@ function es_up() {
 	gc main
 	gu main
 	
-        echo "###### Updating ES 8.4"
+        echo "###### Updating ES 8.5"
 	es8
-	gc 8.4
-	gu 8.4
+	gc 8.5
+	gu 8.5
 	
 	echo "###### Updating ES 7.17"
 	es7
