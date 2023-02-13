@@ -16,4 +16,5 @@ export JAVA15_HOME=/Users/christoph/.sdkman/candidates/java/15.0.1-open
 export JAVA16_HOME=/Users/christoph/.sdkman/candidates/java/16.0.1-open
 export JAVA17_HOME=/Users/christoph/.sdkman/candidates/java/17.0.4-oracle
 export JAVA18_HOME=/Users/christoph/.sdkman/candidates/java/18.0.2-oracle
+export JAVA19_HOME=/Users/christoph/.sdkman/candidates/java/19.0.1-oracle
 export ES_JAVA_HOME=/Users/christoph/.sdkman/candidates/java/18.0.2-oracle

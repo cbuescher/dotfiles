@@ -1,6 +1,6 @@
 [user]
 	name = Christoph Büscher
-	email = cbuescher@posteo.de
+	email = christophbuescher@posteo.de
 	signingkey = CEABB29FCAEF147D
 
 [alias]
@@ -14,6 +14,7 @@
 	cuc = "!f() { git fetch origin; git checkout $1; git pull origin $1; git cherry-pick origin/$2; git diff HEAD~1 HEAD; }; f"
 [push]
 	default = simple
+	autoSetupRemote = true
 [rerere]
 	enabled = true
 [filter "lfs"]

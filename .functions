@@ -9,7 +9,7 @@ function convert_flac() {
 # add some git scripts to quickly change branches and update elasticsearch working directories
 function gc() {
     if [ $# -eq 0 ] ; then
-	BRANCH="master"
+	BRANCH="main"
     else
     	BRANCH=$1
     fi
@@ -55,22 +55,14 @@ function es_up() {
 	gc main
 	gu main
 	
-        echo "###### Updating ES 8.5"
+        echo "###### Updating ES 8.7"
 	es8
-	gc 8.5
-	gu 8.5
+	gc 8.7
+	gu 8.7
 	
 	echo "###### Updating ES 7.17"
 	es7
 	gc 7.17
 	gu 7.17
 
-#	echo "###### Updating ES 6.8"
-#	es6
-#	gc 6.8
-#	gu 6.8
-#       sdk use java 12.0.2-open
-#	java --version
-#	./gradlew eclipse
-#       sdk use java 17.0.1-oracle
 }
