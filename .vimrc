@@ -10,3 +10,4 @@ set ruler
 
 " Gitcommit text width
 au FileType gitcommit set tw=80
+set tw=80

@@ -52,6 +52,8 @@ function gu() {
 function es_up() {
 	echo "###### Updating ES main"
 	es
+        START=`git branch --show-current`
+        [[ -n $(git status -s) ]] && echo 'Stashing temporary changes' && git stash save && UNSTASH=true
 	gc main
 	gu main
 	
@@ -64,5 +66,9 @@ function es_up() {
 	es7
 	gc 7.17
 	gu 7.17
-
+        
+        echo "Switching back to original branch $START"
+        es
+        gc $START
+        [[ -n $UNSTASH ]] && echo 'Unstashing temporary changes' && git stash pop
 }
