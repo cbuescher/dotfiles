@@ -1,0 +1,9 @@
+#!/bin/zsh
+for i in `git tag|grep -E "^(v7|v6)"`;
+do 
+   git checkout $i;
+   ES_VERSION=$i
+   LUCENE_VERSION="" 
+   LUCENE_VERSION=`grep "lucene" ./build-tools-internal/version.properties`
+   echo $ES_VERSION $LUCENE_VERSION >> ~/es_to_lucene.txt 
+done;
