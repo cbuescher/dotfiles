@@ -1,8 +1,11 @@
 alias vlc="/Applications/VLC.app/Contents/MacOS/VLC"
 alias es="cd ~/workspace/elasticsearch"
+alias ess="cd ~/workspace/elasticsearch-serverless"
 alias es8="cd ~/workspace/es_8"
 alias es7="cd ~/workspace/es_7"
-unalias gc
+# unalias gc
 alias la='ls -lA'
 alias ll='ls -l'
 alias weather='curl "wttr.in/~Berlin?n2"'
+alias esr='cd ~/workspace/rally && source .venv/bin/activate'
+alias youtube-dl='yt-dlp'

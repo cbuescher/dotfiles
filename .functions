@@ -1,3 +1,49 @@
+function vault_select() {
+  echo "[0] Exit"
+  echo "[1] Staging OSS"
+  echo "[2] Production OSS"
+  echo "[3] GovCloud OSS"
+  echo "[4] Infra Vault Services (AKA secrets.elastic.co)"
+  echo
+
+  while [ -z "${CHOICE}" ]; do
+    printf "Select vault [0-6]: "
+    read CHOICE
+
+    case ${CHOICE} in
+      0) unset CHOICE
+         return 0;;
+      1) export VAULT_ADDR='https://cloud-vault.staging.getin.cloud';;
+      2) export VAULT_ADDR='https://cloud-vault.production.getin.cloud';;
+      3) export VAULT_ADDR='https://vault.us-gov-east-1.aws.elastic-cloud.com';;
+      4) export VAULT_ADDR='https://secrets.elastic.co:8200';;
+      *) unset CHOICE;;
+    esac
+  done
+
+  unset CHOICE
+
+  if ! $(curl --silent --max-time 10 ${CURL_EXTRA_ARGS} ${VAULT_ADDR} >/dev/null); then
+    printf "\nError: could not connect to '${VAULT_ADDR}'\n\nCheck that you're connected to the correct VPN.\n\n"
+    return 1
+  fi
+
+  # Check if we already have a valid token for this host.
+  if $(vault token lookup ${VAULT_EXTRA_ARGS} 1> /dev/null 2>&1); then
+    printf "\nAlready logged into Vault server '${VAULT_ADDR}'\n\n"
+    return 0
+  fi
+
+
+  if ! $(vault login -method=${VAULT_AUTH_METHOD:-oidc} -no-print ${VAULT_EXTRA_ARGS}); then
+    printf "\nError: failed to log into '${VAULT_ADDR}')\n\n"
+    return 2
+  fi
+
+  printf "\nSuccessfully logged into Vault server '${VAULT_ADDR}'\n\n"
+  return 0
+}
+
 function convert_flac() {
 	for f in *.flac 
 		do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"
@@ -7,16 +53,16 @@ function convert_flac() {
 }
 
 # add some git scripts to quickly change branches and update elasticsearch working directories
-function gc() {
-    if [ $# -eq 0 ] ; then
-	BRANCH="main"
-    else
-    	BRANCH=$1
-    fi
-
-    echo "git changing from current to $BRANCH"
-    git checkout $BRANCH
-}
+#function gc() {
+#    if [ $# -eq 0 ] ; then
+#	BRANCH="main"
+#    else
+#    	BRANCH=$1
+#    fi
+#
+#    echo "git changing from current to $BRANCH"
+#    git checkout $BRANCH
+#}
 
 
 function gapr() {
@@ -50,25 +96,102 @@ function gu() {
 }
 
 function es_up() {
+
+        #if ! [[ -f ~/.es_up_age && -n (find ~/.es_up_age -mtime -120s -print) ]]; then
+        #  echo "es_up older than 120s"
+        #  touch ~/es_up_age
+	#fi
+
+
 	echo "###### Updating ES main"
+        CURRENT_DIR=`pwd`
 	es
         START=`git branch --show-current`
         [[ -n $(git status -s) ]] && echo 'Stashing temporary changes' && git stash save && UNSTASH=true
-	gc main
+	gco main
 	gu main
 	
-        echo "###### Updating ES 8.7"
+        echo "###### Updating ES 8.x"
 	es8
-	gc 8.7
-	gu 8.7
+	gco 8.x
+	gu 8.x
 	
 	echo "###### Updating ES 7.17"
 	es7
-	gc 7.17
+	gco 7.17
 	gu 7.17
         
+        echo "###### Updating ES Serverless main"
+        ess
+        START=`git branch --show-current`
+        [[ -n $(git status -s) ]] && echo 'Stashing temporary changes' && git stash save && UNSTASH=true
+        gco main
+        gu main
+
         echo "Switching back to original branch $START"
-        es
+        ess
         gc $START
         [[ -n $UNSTASH ]] && echo 'Unstashing temporary changes' && git stash pop
+        cd $CURRENT_DIR
+}
+
+function aws_auth() {
+    cd ~/okta-awscli-installation
+    source env/bin/activate
+    okta-awscli --okta-profile=elastic-dev --profile=okta-elastic-dev s3 ls --force
+}
+
+function esb() {
+    cd ~/workspace/elasticsearch-benchmarks
+    source .venv/bin/activate
+}
+
+function review() {
+  # First checkout the branch you want to review and ensure it's up to date.
+  git fetch origin  # Make sure we have the base commit in upstream that the branch references
+  REVIEW_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  git stash -m "Backup of local changes prior to review: branch=$REVIEW_BRANCH , time=$(date '+%F_%H:%M:%S')"  # Just in case, don't want to delete changes. Store stash with with timestamp.
+  git checkout $(git merge-base origin/main "$REVIEW_BRANCH")
+  git diff origin/main..."$REVIEW_BRANCH" | git apply # get diff of branch with merge-base, apply changes to staging area.
+  echo -e "\n\nWhen done with review, jump back to branch and discard local changes using the command:"
+  echo "git checkout -f $REVIEW_BRANCH" 
+}
+
+function esc() {
+  echo "logging out of current tsh session"
+  tsh logout
+ 
+  OPT1=$1
+  case  "$OPT1" in
+    qa)
+      export ENV_URL=https://admin.global.qa.cld.elstc.co
+      export TSH_PROXY=teleport-proxy.staging.getin.cloud
+      ;;
+    staging)
+      export ENV_URL=https://admin.global.staging.cld.elstc.co
+      export TSH_PROXY=teleport-proxy.staging.getin.cloud
+      ;;
+    production)
+      export ENV_URL=https://admin.global.elastic.cloud
+      export TSH_PROXY=teleport-proxy.secops.elstc.co
+      ;;
+    *)
+      echo "enter qa, staging or production"
+      ;; 
+  esac
+
+  echo "Set the following environment variables"
+  echo "ENV_URL=$ENV_URL"
+  echo "TSH_PROXY=$TSH_PROXY"
+  echo "Overview at https://docs.elastic.dev/elasticsearch-team/serverless/environments"
+
+  tsh login --proxy=$TSH_PROXY --auth=okta
+
+  echo "Setting API_KEY"
+  export API_KEY=$(security find-generic-password -w -s cloud-$1-api)
+  
+  read "PROJECT_ID?Enter project ID > "
+  echo "trying to get K8s cluster name"
+  K8S_CLUSTER_NAME=$(for PROJECT_TYPE in elasticsearch observability security; do (curl "${ENV_URL}/api/v1/admin/serverless/projects/${PROJECT_TYPE}/${PROJECT_ID}" --silent -f -H "Authorization: ApiKey $API_KEY" || true); done  | jq -cMr .clusters.elasticsearch)
+  echo "K8S_CLUSTER_NAME=$K8S_CLUSTER_NAME"
 }

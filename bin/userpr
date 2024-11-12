@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+vared -p "User: " -c GITUSER
+vared -p "Branch: " -c BRANCH
+echo $USER $BRANCH
+
+git remote add $GITUSER git@github.com:$GITUSER/elasticsearch.git
+git fetch $GITUSER
+
+git checkout -b $BRANCH $GITUSER/$BRANCH
+
+echo "Ready for changes, when do: git push $GITUSER $BRANCH" 

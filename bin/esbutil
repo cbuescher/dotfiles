@@ -1,0 +1,5 @@
+echo $ENVID
+echo $TRACK
+echo $CHALLENGE
+echo $PARAMS
+echo $UTAG
