@@ -1,5 +1,5 @@
 #!/bin/zsh
-for i in `git tag|grep -E "^(v7|v6)"`;
+for i in `git tag|grep -E "^(v8)"`;
 do 
    git checkout $i;
    ES_VERSION=$i
