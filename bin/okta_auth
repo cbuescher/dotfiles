@@ -1,0 +1,3 @@
+cd /Users/christoph/okta-awscli-installation
+source env/bin/activate
+okta-awscli --okta-profile=elastic-dev --profile=okta-elastic-dev s3 ls
