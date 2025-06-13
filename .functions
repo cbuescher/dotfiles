@@ -111,10 +111,10 @@ function es_up() {
 	gco main
 	gu main
 	
-        echo "###### Updating ES 8.x"
+        echo "###### Updating ES 8.19"
 	es8
-	gco 8.x
-	gu 8.x
+	gco 8.19
+	gu 8.19
 	
 	echo "###### Updating ES 7.17"
 	es7
