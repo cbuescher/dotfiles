@@ -1,0 +1,8 @@
+rootProject {
+  if(project.name == 'elasticsearch') {
+    afterEvaluate {
+      def cluster = testClusters.named("runTask").get()
+      cluster.numberOfNodes = 3      
+    }
+  }
+}
