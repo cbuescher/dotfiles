@@ -1,2 +1,0 @@
-git checkout master -- libs/core/src/main/java/org/elasticsearch/bootstrap/JarHell.java
-git checkout master -- server/src/main/java/org/elasticsearch/bootstrap/Security.java
